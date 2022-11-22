@@ -1,0 +1,41 @@
+---
+- name: Secured keys and secrets
+  hosts: 
+    - '{{securedservers_target|default("securedservers")}}'
+  tasks:
+    - name: "Secured | Set Timestamp"
+      set_fact:
+        now: '{{ lookup("pipe", "date +%Y%m%d") }}'
+
+    - name: "Secured | Create keys Directory"
+      when: secured_remote is defined
+      become_user: "{{ project_user }}"    
+      file:
+        path: "{{ secured_remote }}"
+        mode: 0755
+        owner: "{{ project_user }}"
+        state: directory
+      tags:
+        - setup
+
+    - name: "Secured | Copy Google Forms creds"
+      when: 
+        - secured_remote is defined
+        - google_forms_key is defined
+      become_user: "{{ project_user }}"    
+      copy:
+        content: "{{ lookup('file', '{{ google_forms_key }}') }}"
+        dest: "{{ secured_remote }}/google_forms_cred.json"
+      tags:
+        - setup
+
+    - name: "Secured | Copy Google Mail creds"
+      when:
+        - secured_remote is defined
+        - google_mail_key is defined
+      become_user: "{{ project_user }}"
+      copy:
+        content: "{{ lookup('file', '{{ google_mail_key }}') }}"
+        dest: "{{ secured_remote }}/google_mail_cred.json"
+      tags:
+        - setup

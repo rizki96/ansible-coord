@@ -1,12 +1,13 @@
 ---
 - name: Application Configuration
+  # gather_facts: no
   hosts: 
     - '{{appservers_target|default("appservers")}}'
     - '{{taskservers_target|default("taskservers")}}'
-  ignore_unreachable: "{{ ignore_unreachable|d(False) }}"
   roles:
     - role: application
       tags:
         - application
         - django
+        - flask
         - fastapi

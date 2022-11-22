@@ -19,6 +19,11 @@
         tasks_from: cleanup
       tags:
         - uvicorn
+    - import_role:
+        name: uwsgi
+        tasks_from: cleanup
+      tags:
+        - uwsgi 
     - import_role: 
         name: rabbitmq
         tasks_from: cleanup

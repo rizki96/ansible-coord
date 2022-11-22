@@ -1,6 +1,7 @@
 [program:{{ project_name }}-{{ item.name }}-uwsgi]
 command={{ virtualenv }}/bin/uwsgi
   --wsgi-file {{ item.wsgi }}
+  --module {{ item.wsgi_module }}
   {% for key, value in dot_env.items() %}
   --env {{key}}={{value}}
   {% endfor %}
@@ -12,6 +13,7 @@ command={{ virtualenv }}/bin/uwsgi
   --reload-on-rss 96
   --master
   --max-requests 5000
+  --buffer-size 65535
   --vacuum
   --ignore-sigpipe
   --die-on-term

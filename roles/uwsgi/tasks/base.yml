@@ -13,7 +13,7 @@
     - item.remove|d(False) == False
   become: yes
   template: >
-    src=supervisor.uwsgi.conf.j2
+    src=uwsgi_params.j2
     dest=/etc/nginx/snippets/uwsgi_params
     owner=root
     group=root

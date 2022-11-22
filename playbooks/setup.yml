@@ -1,7 +1,7 @@
 ---
-- import_playbook: queues.yml
-  vars:
-    is_setup: True
+#- import_playbook: queues.yml
+#  vars:
+#    is_setup: True
 - import_playbook: caches.yml
   vars:
     is_setup: True
@@ -17,8 +17,12 @@
 - import_playbook: app.yml
   vars:
     is_setup: True
-  tags:
-    - virtualenv
 - import_playbook: loadbalancers.yml
+  vars:
+    is_setup: True
+- import_playbook: processes.yml
+  vars:
+    is_setup: True
+- import_playbook: keys.yml
   vars:
     is_setup: True

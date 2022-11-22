@@ -44,14 +44,12 @@
     create: yes
   tags:
     - setup
-    - virtualenv
 
 - name: Update pyenv python versions
   command:
     cmd: "{{ pyenv_root }}/bin/pyenv update"
   tags:
     - setup
-    - virtualenv
 
 - name: Build python versions
   command:
@@ -60,7 +58,6 @@
   loop: "{{ pyenv_python_versions }}"
   tags:
     - setup
-    - virtualenv
 
 - name: Create virtualenvs
   command:
@@ -69,6 +66,5 @@
   loop: "{{ pyenv_virtualenvs }}"
   tags:
     - setup
-    - virtualenv
 
 

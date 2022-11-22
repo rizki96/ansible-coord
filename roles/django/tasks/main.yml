@@ -1,10 +1,10 @@
 ---
 # Main deployment workflow
-- name: Django | Build new environment dictionary
+- name: Build new environment dictionary
   set_fact:
     dotenv_with_superuser: "{{ dot_env | combine({'DJANGO_SUPERUSER_PASSWORD': '{{ django.superuser.password }}'}, recursive=true) }}"
 
-- name: Django | Run createsuperuser command
+- name: Run createsuperuser command
   when: django.superuser is defined
   become_user: "{{ project_user }}"
   django_manage:
@@ -17,7 +17,7 @@
   tags:
     - setup
 
-- name: Django | Run database migrations
+- name: Run database migrations
   when: django_commands.migrate|d(False) == True
   become_user:  "{{ project_user }}"
   django_manage: >
@@ -29,7 +29,7 @@
   tags:
     - deploy
 
-- name: Django | Install database fixtures
+- name: Install database fixtures
   when: django_commands.fixtures is defined
   become_user: "{{ project_user }}"
   django_manage: >
@@ -43,7 +43,7 @@
   tags:
     - deploy
 
-- name: Django | Run collect static command
+- name: Run collect static command
   when: django_commands.collectstatic|d(False) == True
   become_user: "{{ project_user }}"
   django_manage: >

@@ -1,15 +1,4 @@
 ---
-- name: Application | Trigger Application Restart
-  debug: msg="Trigger Application Restart"
-  changed_when: true
-  notify:
-    - restart celery workers
-    - restart uvicorn
-    - restart app
-  tags:
-    - never
-    - restart
-
 - name: Application | Clone or pull git repository
   become: yes
   become_user: "{{ project_user }}"
@@ -18,7 +7,7 @@
     dest={{ project_src }}
     version={{ repo.version }}
     accept_newhostkey=yes
-    force={{ repo.force|d(True) }}
+    force=yes
     update=yes
   notify:
     - restart celery workers
@@ -59,38 +48,26 @@
   tags:
     - deploy
 
-- name: Application | Upload template files
-  when:
-    - template_files is defined
-  become: yes
-  become_user: "{{ project_user }}"
-  template:
-    src: "{{ item.template }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ item.owner | default(omit) }}"
-    group: "{{ item.group | default(omit) }}"
-    mode: "{{ item.mode | default(omit) }}"
-    backup: "{{ item.backup | default(omit) }}"
-    force: "{{ item.force | default(True) }}"
-    validate: "{{ item.validate | default(omit) }}"
-    selevel: "{{ item.selevel | default(omit) }}"
-    serole: "{{ item.serole | default(omit) }}"
-    setype: "{{ item.setype | default(omit) }}"
-    seuser: "{{ item.seuser | default(omit) }}"
-  with_items: "{{ template_files }}"
-  notify:
-    - restart celery workers
-    - restart uvicorn
-    - restart app
+- name: Application | Sync python package requirements using pipenv
+  when: package_manager == 'pipenv'
+  include_role:
+    name: pipenv
   tags:
     - deploy
 
-- name: Application | Set Package Manager
+- name: Application | Sync python package requirements using poetry
+  when: package_manager == 'poetry'
   include_role:
-    name: package_manager
+    name: poetry
   tags:
     - deploy
-    - virtualenv
+
+- name: Application | Install python package requirements using pip
+  when: package_manager == 'pip'
+  include_role:
+    name: pip
+  tags:
+    - deploy
 
 - name: Application | Setup Django Application
   include_role:
