@@ -7,6 +7,7 @@ command={{ virtualenv }}/bin/uwsgi
   {% endfor %}
   --socket {{ item.host }}:{{ item.port }}
   --virtualenv {{ virtualenv }}
+  --chdir {{ app_working_dir }}
   --pythonpath {{ app_working_dir }}
   --processes {{ item.processes }}
   --reload-on-as 128
