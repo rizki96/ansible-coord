@@ -8,9 +8,11 @@
     - setup
 
 - name: "Add nodejs ppa for apt repo"
+  when:
+    - node_version is defined
   become: yes
   apt_repository:
-    repo: deb https://deb.nodesource.com/node_{{ node_version }}.x {{ ubuntu_name }} main
+    repo: deb https://deb.nodesource.com/{{ node_version }} {{ ansible_distribution_release }} main
     update_cache: yes
   tags:
     - setup
