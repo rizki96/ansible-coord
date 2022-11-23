@@ -33,18 +33,28 @@
   tags:
     - deploy
 
-- name: Move nginx child configuration file
+- name: Copy nginx child configuration file
+  when: 
+    - nginx.config is defined
+    - nginx.parent_config is defined
+    - item.remove|d(False) == False
+  become: yes
+  copy: > 
+    remote_src=yes
+    src=/etc/nginx/sites-enabled/{{ project_name }}-{{ item.name }}.conf
+    dest=/etc/nginx/{{ parent_project_name }}/{{ project_name }}-{{ item.name }}.conf
+    force=yes
+  with_items: "{{ nginx.config }}"
+  tags:
+    - deploy
+
+- name: Remove old nginx child configuration file
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
     - item.remove|d(False) == False
   become: yes
   notify: restart nginx
-  copy: > 
-    remote_src=yes
-    src=/etc/nginx/sites-enabled/{{ project_name }}-{{ item.name }}.conf
-    dest=/etc/nginx/{{ parent_project_name }}/{{ project_name }}-{{ item.name }}.conf
-    force=yes
   file: >
     path=/etc/nginx/sites-enabled/{{ project_name }}-{{ item.name }}.conf
     state=absent
