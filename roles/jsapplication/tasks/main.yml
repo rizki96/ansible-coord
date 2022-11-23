@@ -1,5 +1,6 @@
 ---
 - name: JS Application | Clone or pull git repository
+  when: node_version is defined
   become: yes
   become_user: "{{ project_user }}"
   git: >
@@ -13,6 +14,7 @@
     - deploy
 
 - name: JS Application | Deps install application
+  when: node_version is defined
   yarn:
     path: "{{ project_src }}"
     production: false
@@ -23,6 +25,7 @@
 
 - name: JS Application | Activate kendo-ui-license
   when: 
+    - node_version is defined
     - kendo_ui is defined
   become: yes
   become_user: '{{ project_user }}' 
@@ -32,6 +35,7 @@
 
 - name: JS Application | Create .env file
   when:
+    - node_version is defined
     - dot_env_file.dest is defined
     - dot_env is defined
   become: yes
@@ -53,6 +57,7 @@
     - deploy
 
 - name: JS Application | Build application
+  when: node_version is defined
   become: yes
   become_user: '{{ project_user }}' 
   command: 'yarn build'
