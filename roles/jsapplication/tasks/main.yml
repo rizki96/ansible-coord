@@ -69,10 +69,9 @@
 - name: JS Application | Link application
   when: node_version is defined
   become: yes
-  become_user: '{{ project_user }}' 
   file:
     src: '{{ project_src }}/build'
     dest: '{{ static_root }}'
-    owner: '{{ project_user }}'
-    group: '{{ project_user }}'
+    owner: 'root'
+    group: 'root'
     state: link
