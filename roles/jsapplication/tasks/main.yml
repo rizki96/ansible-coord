@@ -72,6 +72,4 @@
   file:
     src: '{{ project_src }}/build'
     dest: '{{ static_root }}'
-    owner: 'root'
-    group: 'root'
     state: link
