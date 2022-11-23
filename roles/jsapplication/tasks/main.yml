@@ -1,0 +1,62 @@
+---
+- name: JS Application | Clone or pull git repository
+  become: yes
+  become_user: "{{ project_user }}"
+  git: >
+    repo={{ repo.url }}
+    dest={{ project_src }}
+    version={{ repo.version }}
+    accept_newhostkey=yes
+    force=yes
+    update=yes
+  tags:
+    - deploy
+
+- name: JS Application | Deps install application
+  yarn:
+    path: "{{ project_src }}"
+    production: false
+  become: true
+  become_user: "{{ project_user }}"
+  tags:
+    - deploy
+
+- name: JS Application | Activate kendo-ui-license
+  when: 
+    - kendo_ui is defined
+  become: yes
+  become_user: '{{ project_user }}' 
+  command: 'npx kendo-ui-license activate'
+  args:
+    chdir:  '{{ kendo_ui.src }}'
+
+- name: JS Application | Create .env file
+  when:
+    - dot_env_file.dest is defined
+    - dot_env is defined
+  become: yes
+  become_user: "{{ project_user }}"
+  template:
+    src: env-file.template
+    dest: "{{ dot_env_file.dest }}"
+    owner: "{{ dot_env_file.owner | default(omit) }}"
+    group: "{{ dot_env_file.group | default(omit) }}"
+    mode: "{{ dot_env_file.mode | default(omit) }}"
+    backup: "{{ dot_env_file.backup | default(omit) }}"
+    force: "{{ dot_env_file.force | default(True) }}"
+    validate: "{{ dot_env_file.validate | default(omit) }}"
+    selevel: "{{ dot_env_file.selevel | default(omit) }}"
+    serole: "{{ dot_env_file.serole | default(omit) }}"
+    setype: "{{ dot_env_file.setype | default(omit) }}"
+    seuser: "{{ dot_env_file.seuser | default(omit) }}"
+  tags:
+    - deploy
+
+- name: JS Application | Build application
+  become: yes
+  become_user: '{{ project_user }}' 
+  command: 'yarn build'
+  args:
+    chdir:  '{{ project_src }}'
+  environment:
+    CI: "false"

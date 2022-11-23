@@ -1,0 +1,10 @@
+---
+- name: JS Application Configuration
+  # gather_facts: no
+  hosts: '{{jsapps_target|default("jsapps")}}'
+  roles:
+    - role: jsapplication
+      tags:
+        - jsapplication
+        - nodejs
+        - yarn

@@ -1,6 +1,8 @@
 ---
 - name: Install platform dependencies
-  hosts: '{{appservers_target|default("appservers")}}'
+  hosts: 
+    - '{{appservers_target|default("appservers")}}'
+    - '{{jsapps_target|default("jsapps")}}'
   roles:
     - role: pyenv
       tags:
@@ -8,3 +10,9 @@
     - role: supervisor
       tags:
         - supervisor
+    - role: nodejs
+      tags:
+        - nodejs
+    - role: yarn
+      tags:
+        - yarn

@@ -20,3 +20,20 @@
   tags:
     - deploy
 
+- name: Install nginx parent configuration file
+  when: 
+    - nginx.config is defined
+    - nginx.parent_config is defined
+    - item.remove|d(False) == False
+  become: yes
+  notify: restart nginx
+  template: >
+    src={{ item.config_template }}
+    dest=/etc/nginx/sites-enabled/{{ parent_project_name }}-{{ item.name }}.conf
+    force=yes
+  with_items: 
+    - "{{ nginx.config }}"
+    - "{{ nginx.parent_config }}"
+  tags:
+    - deploy
+

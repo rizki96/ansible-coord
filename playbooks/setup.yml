@@ -17,6 +17,9 @@
 - import_playbook: app.yml
   vars:
     is_setup: True
+- import_playbook: jsapp.yml
+  vars:
+    is_setup: True
 - import_playbook: loadbalancers.yml
   vars:
     is_setup: True
