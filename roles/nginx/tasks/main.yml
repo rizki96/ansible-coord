@@ -33,11 +33,19 @@
   tags:
     - deploy
 
+- name: Ensures /etc/nginx/{{ parent_project_name }} dir exists
+  when: 
+    - nginx.config is defined
+    - nginx.parent_config is defined
+  become: yes
+  file: path=/etc/nginx/{{ parent_project_name }} state=directory
+  tags:
+    - deploy
+
 - name: Copy nginx child configuration file
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
-    - item.remove|d(False) == False
   become: yes
   copy: > 
     remote_src=yes
@@ -52,7 +60,6 @@
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
-    - item.remove|d(False) == False
   become: yes
   notify: restart nginx
   file: >
