@@ -37,6 +37,7 @@
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
+    - item.remove|d(False) == False
   become: yes
   file: path=/etc/nginx/{{ parent_project_name }} state=directory
   tags:
@@ -46,11 +47,12 @@
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
+    - item.remove|d(False) == False
   become: yes
   copy: > 
     remote_src=yes
     src=/etc/nginx/sites-enabled/{{ project_name }}-{{ item.name }}.conf
-    dest=/etc/nginx/{{ parent_project_name }}/{{ project_name }}-{{ item.name }}.conf
+    dest=/etc/nginx/{{ parent_project_name }}/{{ project_order }}-{{ project_name }}-{{ item.name }}.conf
     force=yes
   with_items: "{{ nginx.config }}"
   tags:
@@ -60,6 +62,7 @@
   when: 
     - nginx.config is defined
     - nginx.parent_config is defined
+    - item.remove|d(False) == False
   become: yes
   notify: restart nginx
   file: >
