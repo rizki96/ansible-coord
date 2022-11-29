@@ -81,7 +81,9 @@
     CI: "false"
 
 - name: JS Application | Link application
-  when: node_version is defined
+  when:
+    - node_version is defined
+    - (not disable_app_link is defined) or (disable_app_link|d(False) == False)
   become: yes
   file:
     src: '{{ project_src }}/build'
