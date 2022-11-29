@@ -5,6 +5,9 @@
 - import_playbook: caches.yml
   vars:
     is_setup: True
+- import_playbook: loadbalancers.yml
+  vars:
+    is_setup: True
 - import_playbook: dbs.yml
   vars:
     is_setup: True
@@ -18,9 +21,6 @@
   vars:
     is_setup: True
 - import_playbook: jsapp.yml
-  vars:
-    is_setup: True
-- import_playbook: loadbalancers.yml
   vars:
     is_setup: True
 - import_playbook: processes.yml
