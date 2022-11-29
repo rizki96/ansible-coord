@@ -16,6 +16,7 @@
     pkg=msodbcsql17
     state=present
     update-cache=yes
-  environment: ACCEPT_EULA=Y
+  environment: 
+    ACCEPT_EULA: "Y"
   tags:
     - setup
