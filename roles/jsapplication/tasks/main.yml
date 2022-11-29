@@ -13,7 +13,7 @@
   tags:
     - deploy
 
-- name: JS Application | Deps install application
+- name: JS Application | Deps npm install application
   when: 
     - node_version is defined
     - (use_npm_install is defined) and (use_npm_install|d(False) == True)
@@ -25,7 +25,7 @@
   tags:
     - deploy
 
-- name: JS Application | Deps install application
+- name: JS Application | Deps yarn install application
   when:
     - node_version is defined
     - (not use_npm_install is defined) or (use_npm_install|d(False) == False)
