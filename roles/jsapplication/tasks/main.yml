@@ -14,7 +14,21 @@
     - deploy
 
 - name: JS Application | Deps install application
-  when: node_version is defined
+  when: 
+    - node_version is defined
+    - (use_npm_install is defined) and (use_npm_install|d(False) == True)
+  yarn:
+    path: "{{ project_src }}"
+    production: false
+  become: true
+  become_user: "{{ project_user }}"
+  tags:
+    - deploy
+
+- name: JS Application | Deps install application
+  when:
+    - node_version is defined
+    - (not use_npm_install is defined) or (use_npm_install|d(False) == False)
   yarn:
     path: "{{ project_src }}"
     production: false
