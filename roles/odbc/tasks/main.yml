@@ -9,6 +9,13 @@
   tags:
     - setup
 
+- name: ODBC | Add file apt list to the config
+  when: odbc is defined
+  become: yes
+  get_url:
+    url: https://packages.microsoft.com/config/ubuntu/{{ ansible_distribution_release }}/prod.list
+    dest: /etc/apt/sources.list.d/mssql-release.list
+
 - name: ODBC | Install Driver
   when: odbc is defined
   become: yes
