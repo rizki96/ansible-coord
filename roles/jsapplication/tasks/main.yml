@@ -89,3 +89,18 @@
     src: '{{ project_src }}/build'
     dest: '{{ static_root }}'
     state: link
+
+- name: JS Application | Copy src directory to paths
+  when: copy_src_to_paths is defined
+  become: yes
+  copy:
+    src: "{{ project_src }}"
+    dest: "{{ item }}"
+    remote_src: yes
+    force: yes
+    directory_mode: yes
+    owner: "{{ project_user }}"
+    group: "{{ project_group }}"
+  with_items: "{{ copy_src_to_paths }}"
+  tags:
+    - deploy
