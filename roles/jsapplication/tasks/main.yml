@@ -93,6 +93,7 @@
 - name: JS Application | Ensures paths dir exists
   when: copy_src_to_paths is defined
   become: yes
+  become_user: '{{ project_user }}' 
   file: path={{ item }} state=directory
   with_items: "{{ copy_src_to_paths }}"
   tags:
@@ -106,7 +107,6 @@
     dest: "{{ item }}"
     remote_src: yes
     force: yes
-    directory_mode: yes
     owner: "{{ project_user }}"
     group: "{{ project_group }}"
   with_items: "{{ copy_src_to_paths }}"
