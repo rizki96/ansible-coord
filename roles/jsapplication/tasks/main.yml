@@ -103,7 +103,7 @@
   when: copy_src_to_paths is defined
   become: yes
   copy:
-    src: "{{ project_src }}"
+    src: "{{ project_src }}/"
     dest: "{{ item }}"
     remote_src: yes
     force: yes
