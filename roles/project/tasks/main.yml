@@ -59,6 +59,7 @@
     src: "{{ project_src }}"
     dest: "{{ item }}"
     remote_src: yes
+    force: yes
     directory_mode: yes
     owner: "{{ project_user }}"
     group: "{{ project_group }}"
