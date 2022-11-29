@@ -90,6 +90,14 @@
     dest: '{{ static_root }}'
     state: link
 
+- name: JS Application | Ensures paths dir exists
+  when: copy_src_to_paths is defined
+  become: yes
+  file: path={{ item }} state=directory
+  with_items: "{{ copy_src_to_paths }}"
+  tags:
+    - deploy
+
 - name: JS Application | Copy src directory to paths
   when: copy_src_to_paths is defined
   become: yes
