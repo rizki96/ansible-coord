@@ -4,7 +4,7 @@
 
 # Main workflow
 - name: uWSGI | Stop uwsgi process
-  when: uvicorn is defined
+  when: uwsgi is defined
   become: yes
   supervisorctl: >
     name={{ project_name }}-{{ item.name }}-uwsgi:
