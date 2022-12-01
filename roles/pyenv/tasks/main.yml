@@ -48,6 +48,7 @@
 - name: Update pyenv python versions
   command:
     cmd: "{{ pyenv_root }}/bin/pyenv update"
+  ignore_errors: true
   tags:
     - setup
 
