@@ -13,3 +13,4 @@
     name=supervisor
     enabled=yes
     state=started
+  ignore_errors: true
