@@ -7,7 +7,9 @@
     - role: uvicorn
       tags:
         - uvicorn
+    - role: uwsgi
+      tags:
+        - uwsgi
     - role: celery
       tags:
         - celery
-
