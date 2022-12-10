@@ -2,6 +2,7 @@
 - import_tasks: cleanup.yml
 
 - name: Stop celery workers
+  when: celery.workers is defined
   become: yes
   supervisorctl: >
     name={{project_name}}-{{ item.node_name }}
@@ -30,7 +31,9 @@
     - deploy
 
 - name: Start celery workers
-  when: item.remove|d(False) == False
+  when:
+    - celery.workers is defined
+    - item.remove|d(False) == False
   become: yes
   supervisorctl: >
     name={{project_name}}-{{ item.node_name }}
