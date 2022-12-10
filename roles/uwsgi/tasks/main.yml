@@ -7,7 +7,7 @@
   when: uwsgi is defined
   become: yes
   supervisorctl: >
-    name={{ project_name }}-{{ item.name }}-uwsgi:
+    name={{ project_name }}-{{ item.name }}-uwsgi
     state=stopped
   with_items: "{{ uwsgi }}"
   ignore_errors: yes
@@ -43,7 +43,7 @@
     - item.remove|d(False) == False
   become: yes
   supervisorctl: >
-    name={{ project_name }}-{{ item.name }}-uwsgi:
+    name={{ project_name }}-{{ item.name }}-uwsgi
     state=started
   with_items: "{{ uwsgi }}"
   tags:
