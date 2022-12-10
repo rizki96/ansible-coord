@@ -10,6 +10,7 @@
     name={{ project_name }}-{{ item.name }}-uwsgi:
     state=stopped
   with_items: "{{ uwsgi }}"
+  ignore_errors: yes
   tags:
     - stop
     - restart
