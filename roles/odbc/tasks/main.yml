@@ -8,6 +8,7 @@
   # with_items: "{{ odbc }}"
   tags:
     - setup
+  environment: "{{ proxy_env }}"
 
 - name: ODBC | Add file apt list to the config
   when: odbc is defined
@@ -15,6 +16,7 @@
   apt_repository:
     repo: deb [arch=amd64,armhf,arm64] https://packages.microsoft.com/ubuntu/{{ ansible_distribution_version }}/prod {{ ansible_distribution_release }} main
     state: present
+  environment: "{{ proxy_env }}"
 
 - name: ODBC | Install Driver
   when: odbc is defined
@@ -25,5 +27,7 @@
     update-cache=yes
   environment: 
     ACCEPT_EULA: "Y"
+    http_proxy: "{{ proxy_env.http_proxy }}"
+    https_proxy: "{{ proxy_env.https_proxy }}"
   tags:
     - setup
