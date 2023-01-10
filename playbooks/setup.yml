@@ -17,6 +17,9 @@
 - import_playbook: project.yml
   vars:
     is_setup: True
+- import_playbook: keys.yml
+  vars:
+    is_setup: True
 - import_playbook: app.yml
   vars:
     is_setup: True
@@ -24,8 +27,5 @@
   vars:
     is_setup: True
 - import_playbook: processes.yml
-  vars:
-    is_setup: True
-- import_playbook: keys.yml
   vars:
     is_setup: True
