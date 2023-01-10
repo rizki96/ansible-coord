@@ -27,4 +27,3 @@
     LANG: '{{ lang }}'
   args:
     chdir: '{{ project_src }}'
-  when: pipenv_venv_check_cmd.changed == True
