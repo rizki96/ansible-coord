@@ -9,14 +9,6 @@
   set_fact:
     package_manager_command: "{{ bin_path }} run"
 
-- name: Pipenv | Installing pipenv shell
-  command: '{{ virtualenv }}/bin/python -m pipenv shell --python {{ python_version }}'
-  environment:
-    VIRTUAL_ENV: '{{ virtualenv }}'
-    PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
-  args:
-    chdir: '{{ project_src }}'
-
 - name: Pipenv | Check if a virtualenv is already created
   command: '{{ virtualenv }}/bin/python -m pipenv --venv'
   environment:
@@ -26,6 +18,16 @@
     chdir: '{{ project_src }}'
   register: pipenv_venv_check_cmd
   changed_when: False
+  ignore_errors: yes
+
+- name: Pipenv | Installing pipenv into working dir
+  command: '{{ virtualenv }}/bin/python -m pipenv install --python {{ python_version }}'
+  environment:
+    VIRTUAL_ENV: '{{ virtualenv }}'
+    PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
+  args:
+    chdir: '{{ project_src }}'
+  when: pipenv_venv_check_cmd == False
 
 - name: Pipenv | Run a pipenv sync
   command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
@@ -35,3 +37,4 @@
     LANG: '{{ lang }}'
   args:
     chdir: '{{ project_src }}'
+  when: pipenv_venv_check_cmd == True
