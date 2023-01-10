@@ -9,15 +9,15 @@
   set_fact:
     package_manager_command: "{{ bin_path }} run"
 
-- name: Pipenv | Check if a virtualenv is already created
-  command: '{{ virtualenv }}/bin/python -m pipenv --venv'
-  environment:
-    VIRTUAL_ENV: '{{ virtualenv }}'
-    PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
-  args:
-    chdir: '{{ project_src }}'
-  register: pipenv_venv_check_cmd
-  changed_when: False
+# - name: Pipenv | Check if a virtualenv is already created
+#   command: '{{ virtualenv }}/bin/python -m pipenv --venv'
+#   environment:
+#     VIRTUAL_ENV: '{{ virtualenv }}'
+#     PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
+#   args:
+#     chdir: '{{ project_src }}'
+#   register: pipenv_venv_check_cmd
+#   changed_when: False
 
 - name: Pipenv | Run a pipenv sync
   command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
