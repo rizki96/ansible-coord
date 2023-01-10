@@ -17,7 +17,7 @@
   args:
     chdir: '{{ project_src }}'
   register: pipenv_venv_check_cmd
-  changed_when: pipenv_venv_check_cmd.changed == False
+  changed_when: pipenv_venv_check_cmd.changed == false
 
 - name: Pipenv | Run a pipenv sync
   command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
