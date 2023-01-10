@@ -19,11 +19,42 @@
 #   register: pipenv_venv_check_cmd
 #   changed_when: False
 
-- name: Pipenv | Run a pipenv sync
-  command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
+# - name: Pipenv | Run a pipenv sync
+#   command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
+#   environment:
+#     VIRTUAL_ENV: '{{ virtualenv }}'
+#     PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
+#     LANG: '{{ lang }}'
+#   args:
+#     chdir: '{{ project_src }}'
+
+- name: Pipenv | Check if a virtualenv is already created
+  ignore_errors: true
+  command: '{{ virtualenv }}/bin/python -m pipenv --venv'
+  args:
+    chdir: "{{ project_src }}"
+  register: pipenv_venv_check_cmd
+  changed_when:
+    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
+
+- name: Pipenv | Run a pipenv install
   environment:
     VIRTUAL_ENV: '{{ virtualenv }}'
     PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
     LANG: '{{ lang }}'
+  command: '{{ virtualenv }}/bin/python -m pipenv --bare install --dev'
   args:
-    chdir: '{{ project_src }}'
+    chdir: "{{ project_src }}"
+  when:
+    - ('No virtualenv' in pipenv_venv_check_cmd.stderr)
+
+- name: Pipenv | Run a pipenv sync
+  environment:
+    VIRTUAL_ENV: '{{ virtualenv }}'
+    PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
+    LANG: '{{ lang }}'
+  command: '{{ virtualenv }}/bin/python -m pipenv --bare sync {{ pipenv_extra_args | default() }}'
+  args:
+    chdir: "{{ project_src }}"
+  when:
+    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
