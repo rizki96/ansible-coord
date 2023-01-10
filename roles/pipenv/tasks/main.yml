@@ -9,6 +9,14 @@
   set_fact:
     package_manager_command: "{{ bin_path }} run"
 
+- name: Pipenv | Installing pipenv shell
+  command: '{{ virtualenv }}/bin/python -m pipenv shell --python {{ python_version }}'
+  environment:
+    VIRTUAL_ENV: '{{ virtualenv }}'
+    PIPENV_PYTHON: '{{ virtualenv }}/bin/python }}'
+  args:
+    chdir: '{{ project_src }}'
+
 - name: Pipenv | Check if a virtualenv is already created
   command: '{{ virtualenv }}/bin/python -m pipenv --venv'
   environment:
