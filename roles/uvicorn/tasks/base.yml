@@ -1,5 +1,5 @@
 ---
-- name: Install required packages into virutalenv
+- name: Install required packages into virtualenv
   when: uvicorn is defined
   pip: >
     name=uvicorn
