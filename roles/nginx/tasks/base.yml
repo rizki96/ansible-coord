@@ -2,8 +2,10 @@
 - name: Add ppa:hda-me repo for compression support
   become: yes
   ansible.builtin.apt_repository:
-    repo: ppa:hda-me/nginx-stable
+    repo: ppa:eilander/nginx
+    codename: jammy
     state: present
+    update-cache: yes
   tags:
     - setup
 
@@ -11,9 +13,9 @@
   become: yes
   apt:
     pkg:
-    - brotli
     - nginx
-    - nginx-module-brotli
+    - brotli
+    - zlib-ng
     state: present
     update-cache: yes
   tags:
