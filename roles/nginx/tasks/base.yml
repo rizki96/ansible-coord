@@ -19,6 +19,15 @@
   tags:
     - setup
 
+- name: Install brotli nginx-module
+  become: yes
+  template: >
+    src=brotli-module.conf.j2
+    dest=/etc/nginx/modules-enabled/brotli-module.conf
+    force=yes
+  tags:
+    - setup
+
 # - name: Install required system packages.
 #   become: yes
 #   apt: >
