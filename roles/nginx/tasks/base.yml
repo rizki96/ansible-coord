@@ -1,5 +1,5 @@
 ---
-- name: Add ppa:hda-me repo for compression support
+- name: Add ppa:eilander repo for compression support
   become: yes
   ansible.builtin.apt_repository:
     repo: ppa:eilander/nginx
