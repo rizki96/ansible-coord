@@ -1,12 +1,32 @@
 ---
-- name: Install required system packages.
+- name: Add ppa:hda-me repo for compression support
   become: yes
-  apt: >
-    pkg=nginx
-    state=present
-    update-cache=yes
+  ansible.builtin.apt_repository:
+    repo: ppa:hda-me/nginx-stable
+    state: present
   tags:
     - setup
+
+- name: Install required system packages.
+  become: yes
+  apt:
+    pkg:
+    - brotli
+    - nginx
+    - nginx-module-brotli
+    state: present
+    update-cache: yes
+  tags:
+    - setup
+
+# - name: Install required system packages.
+#   become: yes
+#   apt: >
+#     pkg=nginx
+#     state=present
+#     update-cache=yes
+#   tags:
+#     - setup
 
 - name: Create log directory
   become: yes
