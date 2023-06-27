@@ -3,7 +3,6 @@
   become: yes
   ansible.builtin.apt_repository:
     repo: ppa:eilander/nginx
-    codename: jammy
     state: present
     update-cache: yes
   tags:
