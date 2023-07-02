@@ -3,8 +3,7 @@
   become: yes
   ansible.builtin.apt_repository:
     repo: ppa:eilander/nginx
-    codename: >
-      {{ ansible_distribution_release }}
+    codename: '{{ ansible_distribution_release }}'
     state: present
     update-cache: yes
   tags:
