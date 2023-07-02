@@ -1,11 +1,11 @@
 ---
 - name: Add ppa:eilander repo for compression support
   become: yes
-  ansible.builtin.apt_repository:
-    repo: ppa:eilander/nginx
-    codename: '{{ ansible_distribution_release }}'
-    state: present
-    update-cache: yes
+  ansible.builtin.apt_repository: >
+    repo=ppa:eilander/nginx
+    codename={{ ansible_distribution_release }}
+    state=present
+    update-cache=yes
   tags:
     - setup
 
