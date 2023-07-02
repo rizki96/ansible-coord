@@ -12,7 +12,8 @@
   become: yes
   apt:
     pkg:
-    - nginx
+    - nginx-common
+    - nginx-core
     - brotli
     - libnginx-mod-http-brotli
     state: present
