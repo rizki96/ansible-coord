@@ -1,26 +1,26 @@
 ---
-- name: Add ppa:eilander repo for compression support
-  become: yes
-  ansible.builtin.apt_repository: >
-    repo=ppa:eilander/nginx
-    codename={{ ansible_distribution_release }}
-    state=present
-    update-cache=yes
-  tags:
-    - setup
+# - name: Add ppa:eilander repo for compression support
+#   become: yes
+#   ansible.builtin.apt_repository: >
+#     repo=ppa:eilander/nginx
+#     codename={{ ansible_distribution_release }}
+#     state=present
+#     update-cache=yes
+#   tags:
+#     - setup
 
-- name: Install required system packages.
-  become: yes
-  apt:
-    pkg:
-    - nginx-common
-    - nginx-core
-    - brotli
-    - libnginx-mod-http-brotli
-    state: present
-    update-cache: yes
-  tags:
-    - setup
+# - name: Install required system packages.
+#   become: yes
+#   apt:
+#     pkg:
+#     - nginx-common
+#     - nginx-core
+#     - brotli
+#     - libnginx-mod-http-brotli
+#     state: present
+#     update-cache: yes
+#   tags:
+#     - setup
 
 # - name: Install brotli nginx-module
 #   become: yes
@@ -31,14 +31,14 @@
 #   tags:
 #     - setup
 
-# - name: Install required system packages.
-#   become: yes
-#   apt: >
-#     pkg=nginx
-#     state=present
-#     update-cache=yes
-#   tags:
-#     - setup
+- name: Install required system packages.
+  become: yes
+  apt: >
+    pkg=nginx
+    state=present
+    update-cache=yes
+  tags:
+    - setup
 
 - name: Create log directory
   become: yes
