@@ -1,17 +1,6 @@
 ---
 - import_tasks: cleanup.yml
 
-- name: Stop djmailer runner
-  when: djmailer.runner is defined
-  become: yes
-  supervisorctl: >
-    name={{project_name}}-{{ djmailer.runner.node_name }}
-    state=stopped
-  tags:
-    - stop
-    - restart
-    - never
-    
 - name: Install djmailer worker supervisor process
   when:
     - djmailer.runner is defined
@@ -28,6 +17,17 @@
   tags:
     - deploy
 
+- name: Stop djmailer runner
+  when: djmailer.runner is defined
+  become: yes
+  supervisorctl: >
+    name={{project_name}}-{{ djmailer.runner.node_name }}
+    state=stopped
+  tags:
+    - stop
+    - restart
+    - never
+    
 - name: Start djmailer runner
   when:
     - djmailer.runner is defined
