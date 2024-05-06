@@ -12,7 +12,7 @@
     - restart
     - never
     
-- name: Install Celery worker supervisor process
+- name: Install djmailer worker supervisor process
   when:
     - djmailer.runner is defined
     - djmailer.runner.remove|d(False) == False
@@ -24,7 +24,7 @@
   vars:
     runner: "{{ djmailer.runner }}"
   notify:
-    - restart djmailer runner
+    - start djmailer runner
   tags:
     - deploy
 
