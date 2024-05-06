@@ -1,0 +1,14 @@
+---
+- name: remove djmailer runner
+  when: 
+    - djmailer.runner is defined
+    - djmailer.runner.remove|d(False) == True
+  become: yes
+  supervisorctl: >
+    name={{ project_name }}-{{ djmailer.runner.node_name }}
+    state=absent
+
+- name: update supervisor
+  when: djmailer.runner is defined
+  become: yes
+  command: supervisorctl update

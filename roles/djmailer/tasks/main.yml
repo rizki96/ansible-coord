@@ -1,0 +1,42 @@
+---
+- import_tasks: cleanup.yml
+
+- name: Stop djmailer runner
+  when: djmailer.runner is defined
+  become: yes
+  supervisorctl: >
+    name={{project_name}}-{{ djmailer.runner.node_name }}
+    state=stopped
+  tags:
+    - stop
+    - restart
+    - never
+    
+- name: Install Celery worker supervisor process
+  when:
+    - djmailer.runner is defined
+    - djmailer.runner.remove|d(False) == False
+  become: yes
+  template: >
+    src={{ djmailer.runner.config_template|d('supervisor.mailrunner.conf.j2') }}
+    dest=/etc/supervisor/conf.d/{{ project_name }}-{{ djmailer.runner.node_name }}.conf
+    force=yes
+  vars:
+    runner: "{{ djmailer.runner }}"
+  notify:
+    - restart djmailer runner
+  tags:
+    - deploy
+
+- name: Start djmailer runner
+  when:
+    - djmailer.runner is defined
+    - item.remove|d(False) == False
+  become: yes
+  supervisorctl: >
+    name={{project_name}}-{{ djmailer.runner.node_name }}
+    state=restarted
+  tags:
+    - start
+    - restart
+    - never

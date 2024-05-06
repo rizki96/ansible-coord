@@ -1,0 +1,10 @@
+---
+- name: djmailer | Remove django mailer supervisor configuration.
+  notify: update supervisor
+  when:
+    - djmailer.runner is defined
+    - djmailer.remove|d(False) == True or coord_delete_all|d(False) == True
+  become: yes
+  file: >
+    path=/etc/supervisor/conf.d/{{ project_name }}-{{ djmailer.runner.node_name }}.conf
+    state=absent

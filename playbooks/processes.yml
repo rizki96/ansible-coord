@@ -13,3 +13,6 @@
     - role: celery
       tags:
         - celery
+    - role: djmailer
+      tags:
+        - djmailer

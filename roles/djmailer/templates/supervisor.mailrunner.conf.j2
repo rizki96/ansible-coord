@@ -1,0 +1,15 @@
+[program:{{ project_name }}-{{ djmailer.runner.node_name }}]
+command={{ package_manager_command }} {{ virtualenv }}/bin/python manage.py runmailer_pg
+user={{ project_user }}
+numprocs=1
+directory={{ app_working_dir }}
+{% if item.env_vars|d({}) %}environment={% for key, value in item.env_vars.items() %}{{ key }}="{{ value }}"{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
+
+stdout_logfile={{ project_logs }}/{{ project_name }}-{{ djmailer.runner.node_name }}.log
+redirect_stderr=true
+stdout_logfile_maxbytes=2000000
+stdout_logfile_backups=0
+autostart=true
+autorestart=true
+startsecs=10
+stopwaitsecs = 30
