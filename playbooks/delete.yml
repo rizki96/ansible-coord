@@ -15,6 +15,11 @@
       tags:
         - celery
     - import_role: 
+        name: djmailer
+        tasks_from: cleanup
+      tags:
+        - djmailer
+    - import_role: 
         name: uvicorn
         tasks_from: cleanup
       tags:

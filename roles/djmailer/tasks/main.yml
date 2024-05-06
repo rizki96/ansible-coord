@@ -1,7 +1,7 @@
 ---
 - import_tasks: cleanup.yml
 
-- name: Install djmailer worker supervisor process
+- name: Install djmailer runner supervisor process
   when:
     - djmailer.runner is defined
     - djmailer.runner.remove|d(False) == False
@@ -12,8 +12,8 @@
     force=yes
   vars:
     runner: "{{ djmailer.runner }}"
-  notify:
-    - start djmailer runner
+  # notify:
+  #   - start djmailer runner
   tags:
     - deploy
 
