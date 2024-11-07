@@ -17,8 +17,8 @@
   when: 
     - node_version is defined
     - (use_npm_install is defined) and (use_npm_install|d(False) == True)
-  yarn:
-    path: "{{ project_src }}"
+  npm:
+    path: "{{ project_src }}/{{ sub_project_src }}"
     production: false
   become: true
   become_user: "{{ project_user }}"
@@ -30,7 +30,7 @@
     - node_version is defined
     - (not use_npm_install is defined) or (use_npm_install|d(False) == False)
   yarn:
-    path: "{{ project_src }}"
+    path: "{{ project_src }}/{{ sub_project_src }}"
     production: false
   become: true
   become_user: "{{ project_user }}"
@@ -76,7 +76,7 @@
   become_user: '{{ project_user }}' 
   command: 'yarn build'
   args:
-    chdir:  '{{ project_src }}'
+    chdir:  '{{ project_src }}//{{ sub_project_src }}'
   environment:
     CI: "false"
 
@@ -103,7 +103,7 @@
   when: copy_src_to_paths is defined
   become: yes
   copy:
-    src: "{{ project_src }}/"
+    src: "{{ project_src }}/{{ sub_project_src }}/"
     dest: "{{ item }}"
     remote_src: yes
     force: yes
