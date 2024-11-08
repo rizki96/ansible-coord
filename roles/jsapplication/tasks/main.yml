@@ -115,8 +115,6 @@
     owner: "{{ project_user }}"
     group: "{{ project_group }}"
   with_items: "{{ copy_cfg_to_paths }}"
-  tags:
-    - deploy
 
 - name: JS Application | Ensures dest paths dir exists
   when: copy_src_to_paths is defined
