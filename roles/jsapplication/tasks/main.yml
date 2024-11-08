@@ -70,8 +70,22 @@
   tags:
     - deploy
 
-- name: JS Application | Build application
-  when: node_version is defined
+- name: JS Application | NPM Build application
+  when:
+    - node_version is defined
+    - (use_npm_install is defined) and (use_npm_install|d(False) == True)
+  become: yes
+  become_user: '{{ project_user }}' 
+  command: 'npm run build'
+  args:
+    chdir:  '{{ project_src }}//{{ sub_project_src }}'
+  environment:
+    CI: "false"
+
+- name: JS Application | Yarn Build application
+  when:
+    - node_version is defined
+    - (not use_npm_install is defined) or (use_npm_install|d(False) == False)
   become: yes
   become_user: '{{ project_user }}' 
   command: 'yarn build'
