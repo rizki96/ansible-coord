@@ -104,7 +104,30 @@
     dest: '{{ static_root }}'
     state: link
 
-- name: JS Application | Ensures paths dir exists
+- name: JS Application | Ensures cfg dest paths dir exists
+  when: copy_cfg_to_paths is defined
+  become: yes
+  become_user: '{{ project_user }}' 
+  file: path={{ item.dest }} state=directory
+  with_items: "{{ copy_cfg_to_paths }}"
+  tags:
+    - deploy
+    
+- name: JS Application | Copy config to paths
+  when: copy_cfg_to_paths is defined
+  become: yes
+  copy:
+    src: "{{ project_src }}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+    force: yes
+    owner: "{{ project_user }}"
+    group: "{{ project_group }}"
+  with_items: "{{ copy_cfg_to_paths }}"
+  tags:
+    - deploy
+
+- name: JS Application | Ensures dest paths dir exists
   when: copy_src_to_paths is defined
   become: yes
   become_user: '{{ project_user }}' 
