@@ -11,21 +11,20 @@
 - name: "Add nodejs ppa for apt repo"
   when: node_version is defined
   become: yes
-  apt_repository:
-    repo: deb https://deb.nodesource.com/{{ node_version }} {{ ansible_distribution_release }} main
-    state: present
-    update_cache: no
+  shell:
+    cmd: "/usr/bin/curl -sSL https://deb.nodesource.com/setup_20.x | sh -s --"
   tags:
     - setup
 
-- name: "Update cache"
-  when: node_version is defined
-  become: yes
-  apt:
-    update_cache: yes
-    force: yes
-  tags:
-    - setup
+# - name: "Add nodejs ppa for apt repo"
+#   when: node_version is defined
+#   become: yes
+#   apt_repository:
+#     repo: deb https://deb.nodesource.com/{{ node_version }} {{ ansible_distribution_release }} main
+#     state: present
+#     update_cache: yes
+#   tags:
+#     - setup
 
 - name: "Install nodejs"
   when: node_version is defined
