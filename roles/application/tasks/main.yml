@@ -20,6 +20,7 @@
   pip:
     name: python-dotenv
     virtualenv: '{{ virtualenv }}'
+    virtualenv_command: '{{ project_base }}/.pyenv/versions/{{ python_version }}/bin/virtualenv'
     state: present
 
 - name: Application | Create .env file
