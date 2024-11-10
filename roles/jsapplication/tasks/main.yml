@@ -19,6 +19,7 @@
     - (use_npm_install is defined) and (use_npm_install|d(False) == True)
   npm:
     path: "{{ project_src }}/{{ sub_project_src }}"
+    ci: true
     production: false
   become: true
   become_user: "{{ project_user }}"
