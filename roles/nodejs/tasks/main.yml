@@ -13,7 +13,9 @@
   become: yes
   apt_repository:
     repo: deb https://deb.nodesource.com/{{ node_version }} {{ ansible_distribution_release }} main
+    state: present
     update_cache: yes
+    allow_unauthenticated: true
   tags:
     - setup
 
