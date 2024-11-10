@@ -32,7 +32,7 @@
     - (not use_npm_install is defined) or (use_npm_install|d(False) == False)
   yarn:
     path: "{{ project_src }}/{{ sub_project_src }}"
-    production: false
+    production: true
   become: true
   become_user: "{{ project_user }}"
   tags:
@@ -77,7 +77,7 @@
     - (use_npm_install is defined) and (use_npm_install|d(False) == True)
   become: yes
   become_user: '{{ project_user }}' 
-  command: 'npm run build'
+  command: 'npm run prod'
   args:
     chdir:  '{{ project_src }}//{{ sub_project_src }}'
   environment:
