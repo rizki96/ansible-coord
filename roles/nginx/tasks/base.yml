@@ -37,6 +37,7 @@
     pkg=nginx
     state=present
     update-cache=yes
+    force=yes
     allow-unauthenticated=yes
   tags:
     - setup
