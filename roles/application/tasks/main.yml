@@ -17,6 +17,7 @@
     - deploy
 
 - name: Application | Install virtualenv
+  become: yes
   apt:
     name: python3-virtualenv
     state: present
