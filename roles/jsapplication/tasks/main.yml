@@ -20,7 +20,7 @@
   npm:
     path: "{{ project_src }}/{{ sub_project_src }}"
     ci: true
-    production: false
+    production: true
   become: true
   become_user: "{{ project_user }}"
   tags:
