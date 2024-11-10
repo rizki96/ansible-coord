@@ -14,6 +14,14 @@
   apt_repository:
     repo: deb https://deb.nodesource.com/{{ node_version }} {{ ansible_distribution_release }} main
     state: present
+    update_cache: no
+  tags:
+    - setup
+
+- name: "Update cache"
+  when: node_version is defined
+  become: yes
+  apt:
     update_cache: yes
     allow_unauthenticated: true
   tags:
@@ -26,6 +34,6 @@
     update_cache: yes
     name: nodejs
     state: present
+    allow_unauthenticated: true
   tags:
     - setup
-
