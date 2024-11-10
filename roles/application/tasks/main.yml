@@ -18,6 +18,12 @@
 
 - name: Application | Install python-dotenv
   pip:
+    name: virtualenv
+    virtualenv: '{{ project_base }}/.pyenv/versions/{{ python_version }}'
+    state: present
+
+- name: Application | Install python-dotenv
+  pip:
     name: python-dotenv
     virtualenv: '{{ virtualenv }}'
     virtualenv_command: '{{ project_base }}/.pyenv/versions/{{ python_version }}/bin/virtualenv'
