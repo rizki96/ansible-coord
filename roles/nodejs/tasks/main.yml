@@ -24,6 +24,7 @@
   apt:
     update_cache: yes
     allow_unauthenticated: yes
+    force: yes
   tags:
     - setup
 
@@ -35,5 +36,6 @@
     name: nodejs
     state: present
     allow_unauthenticated: yes
+    force: yes
   tags:
     - setup
