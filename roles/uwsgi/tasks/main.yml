@@ -22,7 +22,7 @@
     - item.remove|d(False) == False
   become: yes
   template: >
-    src=supervisor.uwsgi.conf.j2
+    src={{ item.config_template|d('supervisor.uwsgi.conf.j2') }}
     dest=/etc/supervisor/conf.d/{{ project_name }}-{{ item.name }}-uwsgi.conf
     owner=root
     group=root
