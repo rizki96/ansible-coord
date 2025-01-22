@@ -1,0 +1,93 @@
+---
+# - name: Create tarballs directory
+#   file:
+#     path: "{{ tarballs_dir }}"
+#     state: directory
+#   tags:
+#     - setup
+
+- name: Get live app version number
+  shell: |
+    if [ -f '{{ app_dir }}/releases/start_erl.data' ]; then
+      cut -d' ' -f2 '{{ app_dir }}/releases/start_erl.data'
+    else
+      echo ""
+    fi
+  register: vsn_live
+  changed_when: false
+  tags:
+    - deploy
+
+- set_fact:
+    vsn_live: "{{ vsn_live.stdout }}"
+  tags:
+    - deploy
+
+- name: EX Application | Clone or pull git repository
+  when: erlang_version is defined and elixir_version is defined
+  become: yes
+  become_user: "{{ project_user }}"
+  git: >
+    repo={{ repo.url }}
+    dest={{ project_src }}
+    version={{ repo.version }}
+    accept_newhostkey=yes
+    force=yes
+    update=yes
+  tags:
+    - deploy
+
+- name: Get next app version number
+  shell:
+    cmd: "grep -Po '(?<=version: \")[^\"]+' {{ project_src }}/mix.exs"
+  register: vsn_next
+  changed_when: false
+  tags:
+    - deploy
+
+- set_fact:
+    vsn_next: "{{ vsn_next.stdout }}"
+  tags:
+    - deploy
+
+- name: Fail if the versions match
+  fail:
+    msg: "The live version ({{ vsn_live }}) matches the next version ({{ vsn_next }}). Deployment should not proceed."
+  when: vsn_next == vsn_live
+  tags:
+    - deploy
+
+- name: Run mix release
+  become_user: "{{ project_user }}"
+  shell: |
+    cd {{ project_src }} && \
+    mix deps.get --only prod && \
+    MIX_ENV=prod mix do compile, assets.deploy, release
+  # args:
+  #   creates: "{{ project_src }}/_build/prod/{{ project_name }}-{{ vsn_next }}.tar.gz"
+  tags:
+    - deploy
+
+- name: Run mix system.d init and generate
+  shell: |
+    cd {{ project_src }} && \
+    SYSTEM_USER={{ project_user }} SYSTEM_GROUP={{ project_group }} MIX_ENV=prod mix systemd.generate
+  become_user: "{{ project_user }}"
+  tags:
+    - deploy
+
+- name: EX Application | Link application
+  when: erlang_version is defined and elixir_version is defined
+  become: yes
+  file:
+    src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
+    dest: '/etc/systemd/system'
+    state: link
+  tags:
+    - deploy
+
+- name: Restart if the version do not match
+  notify: start EX Application
+  when: vsn_next != vsn_live
+  tags:
+    - deploy

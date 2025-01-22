@@ -1,0 +1,127 @@
+---
+- name: install prerequisite libraries for erlang (ubuntu / debian)
+  become: true
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400 # 1day
+    state: latest
+    name:
+    - build-essential
+    - autoconf
+    - m4
+    - libncurses5-dev
+    - libwxgtk3.0-gtk3-dev
+    - libgl1-mesa-dev
+    - libglu1-mesa-dev
+    - libpng-dev
+    - libssh-dev
+    - unixodbc-dev
+    - xsltproc
+    - fop
+    - libxml2-utils
+    - libncurses-dev
+    - openjdk-11-jdk
+  when: ansible_system == 'Linux' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian') and erlang_version is defined
+  tags:
+    - setup
+    
+- name: install prerequisite libraries for erlang (macosx)
+  community.general.homebrew:
+    update_homebrew: true
+    name:
+      - autoconf
+      - openssl@1.1
+      - openssl@3
+      - wxwidgets
+      - libxslt
+      - fop
+      - openjdk
+  when: ansible_system == 'Darwin' and erlang_version is defined
+  tags:
+    - setup
+
+- name: sh env
+  ansible.builtin.shell:
+  args:
+    cmd: "{{ shenv_cmd }}"
+    chdir: '{{ ansible_user_dir }}/'
+  register: shenv
+
+- name: asdf plugin add erlang
+  ansible.builtin.shell: |
+    {{ source }} 
+    asdf plugin add erlang
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  failed_when: result.rc != 0 and result.stderr | regex_search('(Plugin named .* already added)') == '' 
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  when: erlang_version is defined
+  tags:
+    - setup
+
+- name: asdf install erlang (for Linux)
+  ansible.builtin.shell: |
+    {{ source }} 
+    asdf install erlang {{ erlang_version | quote }}
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  when: erlang_version is defined and ansible_system == 'Linux'
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
+
+- name: show result
+  debug:
+    var: result
+
+- name: asdf install erlang (macOS OTP version 24.1.x or earlier)
+  ansible.builtin.shell: |
+    {{ source }} 
+    {{ install_erlang_ssl_1_1 }}
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  when: erlang_version is defined and (erlang_version != 'latest' and erlang_version is version_compare('24.2', '<')) and ansible_system == 'Darwin'
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
+
+- name: show result
+  debug:
+    var: result
+  when: erlang_version is defined and (erlang_version != 'latest' and erlang_version is version_compare('24.2', '<')) and ansible_system == 'Darwin'
+
+- name: asdf install erlang (macOS OTP 24.2 or later)
+  ansible.builtin.shell: |
+    {{ source }} 
+    {{ install_erlang_ssl_3 }}
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  when: erlang_version is defined and (erlang_version == 'latest' or (erlang_version is version_compare('24.2', '>='))) and ansible_system == 'Darwin'
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
+
+- name: show result
+  debug:
+    var: result
+  when: erlang_version is defined and (erlang_version == 'latest' or (erlang_version is version_compare('24.2', '>='))) and ansible_system == 'Darwin'
+
+- name: asdf global erlang
+  ansible.builtin.shell: |
+    {{ source }} 
+    asdf global erlang {{ erlang_version | quote }}
+  args:
+    executable: '{{ ansible_user_shell }}'
+  vars:
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  when: erlang_version is defined
+  tags:
+    - setup

@@ -26,6 +26,9 @@
 - import_playbook: jsapp.yml
   vars:
     is_setup: True
+- import_playbook: exapp.yml
+  vars:
+    is_setup: True
 - import_playbook: processes.yml
   vars:
     is_setup: True

@@ -1,0 +1,12 @@
+---
+- name: EX Application Configuration
+  # gather_facts: no
+  hosts: '{{exappservers_target|default("exappservers")}}'
+  roles:
+    - role: exapplication
+      tags:
+        - exapplication
+        - phoenix
+        - erlang
+        - elixir
+        - asdf

@@ -1,0 +1,46 @@
+---
+- name: sh env
+  ansible.builtin.shell:
+  args:
+    cmd: "{{ shenv_cmd }}"
+    chdir: '{{ ansible_user_dir }}/'
+  register: shenv
+
+- name: install prerequisite
+  ansible.builtin.shell: |
+    {{ source }}
+    mix local.rebar --force
+    mix local.hex --force
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
+
+- name: install Phoenix (latest)
+  ansible.builtin.shell: |
+    {{ source }}
+    mix archive.install hex phx_new --force
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  when: phoenix_version == 'latest'
+  vars:
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
+
+- name: install Phoenix (not latest)
+  ansible.builtin.shell: |
+    {{ source }}
+    mix archive.install hex phx_new {{ phoenix }} --force
+  args:
+    executable: '{{ ansible_user_shell }}'
+  register: result
+  when: phoenix_version != 'latest'
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
+  tags:
+    - setup
