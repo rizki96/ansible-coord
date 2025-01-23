@@ -5,6 +5,7 @@
     cmd: "{{ shenv_cmd }}"
     chdir: '{{ ansible_user_dir }}/'
   register: shenv
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
 
 - name: install prerequisite
   ansible.builtin.shell: |
@@ -14,6 +15,7 @@
   args:
     executable: '{{ ansible_user_shell }}'
   register: result
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
   vars: 
     source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
   tags:
@@ -26,7 +28,7 @@
   args:
     executable: '{{ ansible_user_shell }}'
   register: result
-  when: phoenix_version == 'latest'
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined and phoenix_version == 'latest'
   vars:
     source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
   tags:
@@ -39,7 +41,7 @@
   args:
     executable: '{{ ansible_user_shell }}'
   register: result
-  when: phoenix_version != 'latest'
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined and phoenix_version != 'latest'
   vars: 
     source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
   tags:

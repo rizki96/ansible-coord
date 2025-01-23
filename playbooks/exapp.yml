@@ -6,7 +6,6 @@
     - role: exapplication
       tags:
         - exapplication
-        - phoenix
         - erlang
         - elixir
         - asdf

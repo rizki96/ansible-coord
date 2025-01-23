@@ -6,6 +6,11 @@
 #   tags:
 #     - setup
 
+- name: Application | Setup Phoenix Application
+  include_role:
+    name: phoenix
+  when: phoenix is defined
+
 - name: Get live app version number
   shell: |
     if [ -f '{{ app_dir }}/releases/start_erl.data' ]; then
@@ -24,7 +29,7 @@
     - deploy
 
 - name: EX Application | Clone or pull git repository
-  when: erlang_version is defined and elixir_version is defined
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
   become: yes
   become_user: "{{ project_user }}"
   git: >
@@ -86,11 +91,26 @@
   tags:
     - deploy
 
-- name: Restart if the version do not match
+- name: Application | Create .env file
+  when:
+    - dot_env_file.dest is defined 
+    - dot_env is defined
+    - vsn_next != vsn_live
   become: yes
-  debug: msg='restart ex application'  
-  changed_when: true
-  when: vsn_next != vsn_live
+  become_user: "{{ project_user }}"
+  template:
+    src: env-file.template
+    dest: "{{ dot_env_file.dest }}"
+    owner: "{{ dot_env_file.owner | default(omit) }}"
+    group: "{{ dot_env_file.group | default(omit) }}"
+    mode: "{{ dot_env_file.mode | default(omit) }}"
+    backup: "{{ dot_env_file.backup | default(omit) }}"
+    force: "{{ dot_env_file.force | default(True) }}"
+    validate: "{{ dot_env_file.validate | default(omit) }}"
+    selevel: "{{ dot_env_file.selevel | default(omit) }}"
+    serole: "{{ dot_env_file.serole | default(omit) }}"
+    setype: "{{ dot_env_file.setype | default(omit) }}"
+    seuser: "{{ dot_env_file.seuser | default(omit) }}"
   notify: start EX Application
   tags:
     - deploy
