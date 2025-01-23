@@ -11,6 +11,11 @@
     name: phoenix
   when: phoenix is defined
 
+- name: Application | Setup NodeJS Application
+  include_role:
+    name: nodejs
+  when: nodejs is defined
+
 - name: Get live app version number
   shell: |
     if [ -f '{{ app_dir }}/releases/start_erl.data' ]; then
@@ -52,6 +57,18 @@
     state: link
   tags:
     - deploy
+
+- name: EX Application | NPM install assets application
+  when:
+    - node_version is defined
+    - (use_npm_install is defined) and (use_npm_install|d(False) == True)
+  become: yes
+  become_user: '{{ project_user }}' 
+  command: 'npm install'
+  args:
+    chdir:  '{{ project_src }}/assets'
+  environment:
+    CI: "false"
 
 - name: EX Application | Get next app version number
   shell:
