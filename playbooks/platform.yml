@@ -3,6 +3,7 @@
   hosts: 
     - '{{appservers_target|default("appservers")}}'
     - '{{jsapps_target|default("jsapps")}}'
+    - '{{exappservers_target|default("exappservers")}}'
   roles:
     - role: pyenv
       tags:
@@ -16,3 +17,12 @@
     - role: yarn
       tags:
         - yarn
+    - role: asdf
+      tags:
+        - asdf
+    - role: erlang
+      tags:
+        - erlang
+    - role: elixir
+      tags:
+        - elixir
