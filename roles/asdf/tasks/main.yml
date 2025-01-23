@@ -59,10 +59,10 @@
     state: present
     line: "{{ item.line }}"
   with_items:
-  - line: ".  $(brew --prefix asdf)/etc/bash_completion.d/asdf.bash"
-    regexp: '^ \. \$(brew --prefix asdf)/etc/bash_completion\.d/asdf\.bash'
-  - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
-    regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
+    - line: ".  $(brew --prefix asdf)/etc/bash_completion.d/asdf.bash"
+      regexp: '^ \. \$(brew --prefix asdf)/etc/bash_completion\.d/asdf\.bash'
+    - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
+      regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
   when: ansible_system == 'Darwin' and sh_mac == 'bash'
   tags:
     - setup
@@ -73,10 +73,10 @@
     state: present
     line: "{{ item.line }}"
   with_items:
-  - line: ". $(brew --prefix)/share/zsh/site-functions"
-    regexp: '^ \. \$(brew --prefix)/share/zsh/site-functions'
-  - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
-    regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
+    - line: ". $(brew --prefix)/share/zsh/site-functions"
+      regexp: '^ \. \$(brew --prefix)/share/zsh/site-functions'
+    - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
+      regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
   when: ansible_system == 'Darwin' and sh_mac == 'zsh'
   tags:
     - setup

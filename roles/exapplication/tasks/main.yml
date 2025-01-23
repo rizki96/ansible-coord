@@ -81,6 +81,29 @@
   register: shenv
   when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
 
+- name: EX Application | Create .env file
+  when:
+    - dot_env_file.dest is defined 
+    - dot_env is defined
+    - vsn_next != vsn_live
+  become: yes
+  become_user: "{{ project_user }}"
+  template:
+    src: env-file.template
+    dest: "{{ dot_env_file.dest }}"
+    owner: "{{ dot_env_file.owner | default(omit) }}"
+    group: "{{ dot_env_file.group | default(omit) }}"
+    mode: "{{ dot_env_file.mode | default(omit) }}"
+    backup: "{{ dot_env_file.backup | default(omit) }}"
+    force: "{{ dot_env_file.force | default(True) }}"
+    validate: "{{ dot_env_file.validate | default(omit) }}"
+    selevel: "{{ dot_env_file.selevel | default(omit) }}"
+    serole: "{{ dot_env_file.serole | default(omit) }}"
+    setype: "{{ dot_env_file.setype | default(omit) }}"
+    seuser: "{{ dot_env_file.seuser | default(omit) }}"
+  tags:
+    - deploy
+
 - name: EX Application | Run mix release
   become_user: "{{ project_user }}"
   shell: |
@@ -107,35 +130,15 @@
     - deploy
 
 - name: EX Application | Link application to systemd
-  when: erlang_version is defined and elixir_version is defined
+  when: 
+    - erlang_version is defined and elixir_version is defined and phoenix_version is defined
+    - vsn_next != vsn_live
+  changed_when: true
   become: yes
   file:
     src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
     dest: '/etc/systemd/system'
     state: link
-  tags:
-    - deploy
-
-- name: EX Application | Create .env file
-  when:
-    - dot_env_file.dest is defined 
-    - dot_env is defined
-    - vsn_next != vsn_live
-  become: yes
-  become_user: "{{ project_user }}"
-  template:
-    src: env-file.template
-    dest: "{{ dot_env_file.dest }}"
-    owner: "{{ dot_env_file.owner | default(omit) }}"
-    group: "{{ dot_env_file.group | default(omit) }}"
-    mode: "{{ dot_env_file.mode | default(omit) }}"
-    backup: "{{ dot_env_file.backup | default(omit) }}"
-    force: "{{ dot_env_file.force | default(True) }}"
-    validate: "{{ dot_env_file.validate | default(omit) }}"
-    selevel: "{{ dot_env_file.selevel | default(omit) }}"
-    serole: "{{ dot_env_file.serole | default(omit) }}"
-    setype: "{{ dot_env_file.setype | default(omit) }}"
-    seuser: "{{ dot_env_file.seuser | default(omit) }}"
   notify: start EX Application
   tags:
     - deploy

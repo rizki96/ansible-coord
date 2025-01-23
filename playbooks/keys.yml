@@ -39,3 +39,12 @@
         dest: "{{ secured_remote }}/google_mail_cred.json"
       tags:
         - setup
+
+    - name: "Secured | Copy All Encrypted Keys and Creds from Vault"
+      become_user: "{{ project_user }}"
+      with_items: "{{ keys }}"
+      copy:
+        content: "{{ lookup('file', '{{ item.src_path }}') }}"
+        dest: "{{ secured_remote }}/{{ item.dst_path | quote }}"
+      tags:
+        - setup
