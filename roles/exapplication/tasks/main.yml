@@ -146,6 +146,8 @@
     SYSTEM_USER={{ project_user }} SYSTEM_GROUP={{ project_group }} MIX_ENV=prod mix systemd.generate
   become_user: "{{ project_user }}"
   environment: "{{ dot_env }}"
+  vars:
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
   tags:
     - deploy
 
