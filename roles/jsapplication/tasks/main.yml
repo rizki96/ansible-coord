@@ -82,6 +82,7 @@
     chdir:  '{{ project_src }}//{{ sub_project_src }}'
   environment:
     CI: "false"
+  ignore_errors: yes
 
 - name: JS Application | Yarn Build application
   when:
