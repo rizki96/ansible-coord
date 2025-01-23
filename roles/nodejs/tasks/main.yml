@@ -12,7 +12,7 @@
   when: node_version is defined
   become: yes
   shell:
-    cmd: "/usr/bin/curl -sSL https://deb.nodesource.com/{{ node_version }} | sh -s --"
+    cmd: "/usr/bin/curl -sSL https://deb.nodesource.com/{{ node_version }} | bash -s --"
   tags:
     - setup
 
