@@ -11,14 +11,6 @@
     name: phoenix
   when: phoenix is defined
 
-- name: sh env
-  ansible.builtin.shell:
-  args:
-    cmd: "{{ shenv_cmd }}"
-    chdir: '{{ ansible_user_dir }}/'
-  register: shenv
-  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
-
 - name: Get live app version number
   shell: |
     if [ -f '{{ app_dir }}/releases/start_erl.data' ]; then
@@ -70,14 +62,28 @@
   tags:
     - deploy
 
+- name: sh env
+  ansible.builtin.shell:
+  args:
+    cmd: "{{ shenv_cmd }}"
+    chdir: '{{ ansible_user_dir }}/'
+  register: shenv
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
+
 - name: Run mix release
   become_user: "{{ project_user }}"
   shell: |
+    {{ source }}
     cd {{ project_src }} && \
     mix deps.get --only prod && \
     MIX_ENV=prod mix do compile, assets.deploy, release
+  args:
+    executable: '{{ ansible_user_shell }}'
   # args:
   #   creates: "{{ project_src }}/_build/prod/{{ project_name }}-{{ vsn_next }}.tar.gz"
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
+  vars: 
+    source: "{{ shenv.stdout_lines | map('regex_replace', '(^)', '. ') | join('\n') }}"
   tags:
     - deploy
 
