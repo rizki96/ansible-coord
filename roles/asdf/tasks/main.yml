@@ -17,7 +17,7 @@
     repo: https://github.com/asdf-vm/asdf.git
     dest: "{{ ansible_user_dir }}/.asdf"
     depth: 1
-    version: "{{ asdf | quote }}"
+    version: "{{ asdf_version | quote }}"
   register: result
   when: ansible_system == 'Linux' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
   tags:
