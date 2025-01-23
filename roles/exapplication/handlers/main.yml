@@ -1,3 +1,4 @@
 ---
 - name: start EX Application
+  become: yes
   systemd: state=started name={{ project_name }} daemon_reload=yes
