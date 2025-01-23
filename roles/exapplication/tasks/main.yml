@@ -124,6 +124,7 @@
 
 - name: EX Application | Run mix system.d init and generate
   shell: |
+    {{ source }}
     cd {{ project_src }} && \
     SYSTEM_USER={{ project_user }} SYSTEM_GROUP={{ project_group }} MIX_ENV=prod mix systemd.generate
   become_user: "{{ project_user }}"
