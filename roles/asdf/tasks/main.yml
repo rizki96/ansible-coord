@@ -32,12 +32,12 @@
 
 - name: set env vars
   lineinfile:
-    dest: "{{ shrc }}"
+    dest: "{{ shrc_lin }}"
     state: present
     line: "{{ item.line }}"
   with_items:
-    - line: ". $HOME/.asdf/completions/asdf.{{ sh }}"
-      regexp: '^ \. \$HOME/\.asdf/completions/asdf\.{{ sh }}'
+    - line: ". $HOME/.asdf/completions/asdf.{{ sh_lin }}"
+      regexp: '^ \. \$HOME/\.asdf/completions/asdf\.{{ sh_lin }}'
     - line: '. $HOME/.asdf/asdf.sh'
       regexp: '^ \. \$HOME/\.asdf/asdf\.sh'
   when: ansible_system == 'Linux' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
@@ -55,7 +55,7 @@
 
 - name: set env vars (bash)
   lineinfile:
-    dest: "{{ shprofile }}"
+    dest: "{{ shprofile_mac }}"
     state: present
     line: "{{ item.line }}"
   with_items:
@@ -63,13 +63,13 @@
     regexp: '^ \. \$(brew --prefix asdf)/etc/bash_completion\.d/asdf\.bash'
   - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
     regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
-  when: ansible_system == 'Darwin' and sh == 'bash'
+  when: ansible_system == 'Darwin' and sh_mac == 'bash'
   tags:
     - setup
 
 - name: set env vars (zsh)
   lineinfile:
-    dest: "{{ shrc }}"
+    dest: "{{ shrc_mac }}"
     state: present
     line: "{{ item.line }}"
   with_items:
@@ -77,6 +77,6 @@
     regexp: '^ \. \$(brew --prefix)/share/zsh/site-functions'
   - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
     regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
-  when: ansible_system == 'Darwin' and sh == 'zsh'
+  when: ansible_system == 'Darwin' and sh_mac == 'zsh'
   tags:
     - setup

@@ -1,10 +1,6 @@
-- shrc: "{{ ansible_user_dir | quote }}/.{{ ansible_user_shell | basename | quote }}rc"
-  when: ansible_system == 'Linux' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
-- sh: "{{ ansible_user_shell | basename | quote }}"
-  when: ansible_system == 'Linux' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
-- shprofile: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename | regex_replace('$', '_') | regex_replace('zsh_', 'z') }}profile"
-  when: ansible_system == 'Darwin'
-- shrc: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename }}rc"
-  when: ansible_system == 'Darwin'  
-- sh: "{{ ansible_user_shell | basename | quote }}"
-  when: ansible_system == 'Darwin'
+---
+shrc_lin: "{{ ansible_user_dir | quote }}/.{{ ansible_user_shell | basename | quote }}rc"
+sh_lin: "{{ ansible_user_shell | basename | quote }}"
+shprofile_mac: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename | regex_replace('$', '_') | regex_replace('zsh_', 'z') }}profile"
+shrc_mac: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename }}rc"
+sh_mac: "{{ ansible_user_shell | basename | quote }}"
