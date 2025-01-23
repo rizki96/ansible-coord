@@ -45,6 +45,6 @@
       with_items: "{{ keys }}"
       copy:
         content: "{{ lookup('file', '{{ item.src_path }}') }}"
-        dest: "{{ secured_remote }}/{{ item.dst_path | quote }}"
+        dest: "{{ secured_remote }}/{{ item.dst_file | quote }}"
       tags:
         - setup
