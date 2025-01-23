@@ -162,7 +162,7 @@
   become: yes
   file:
     src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
-    dest: '/etc/systemd/system'
+    dest: '/etc/systemd/system/{{ project_name }}.service'
     state: link
   notify: start EX Application
   environment: "{{ dot_env }}"
