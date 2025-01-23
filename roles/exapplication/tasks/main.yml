@@ -11,6 +11,14 @@
     name: phoenix
   when: phoenix is defined
 
+- name: sh env
+  ansible.builtin.shell:
+  args:
+    cmd: "{{ shenv_cmd }}"
+    chdir: '{{ ansible_user_dir }}/'
+  register: shenv
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
+
 - name: Get live app version number
   shell: |
     if [ -f '{{ app_dir }}/releases/start_erl.data' ]; then
