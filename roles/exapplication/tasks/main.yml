@@ -42,7 +42,18 @@
   tags:
     - deploy
 
-- name: Get next app version number
+- name: EX Application | Copy dev.exs config
+  when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
+  become: yes
+  file:
+    remote_src: true
+    src: '{{ project_src }}/config/{{ dev_exs_config }}'
+    dest: '{{ project_src }}/config/dev.exs'
+    state: file
+  tags:
+    - deploy
+
+- name: EX Application | Get next app version number
   shell:
     cmd: "grep -Po '(?<=version: \")[^\"]+' {{ project_src }}/mix.exs"
   register: vsn_next
@@ -55,14 +66,14 @@
   tags:
     - deploy
 
-- name: Fail if the versions match
+- name: EX Application | Fail if the versions match
   fail:
     msg: "The live version ({{ vsn_live }}) matches the next version ({{ vsn_next }}). Deployment should not proceed."
   when: vsn_next == vsn_live
   tags:
     - deploy
 
-- name: sh env
+- name: EX Application | sh env
   ansible.builtin.shell:
   args:
     cmd: "{{ shenv_cmd }}"
@@ -70,7 +81,7 @@
   register: shenv
   when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
 
-- name: Run mix release
+- name: EX Application | Run mix release
   become_user: "{{ project_user }}"
   shell: |
     {{ source }}
@@ -87,7 +98,7 @@
   tags:
     - deploy
 
-- name: Run mix system.d init and generate
+- name: EX Application | Run mix system.d init and generate
   shell: |
     cd {{ project_src }} && \
     SYSTEM_USER={{ project_user }} SYSTEM_GROUP={{ project_group }} MIX_ENV=prod mix systemd.generate
@@ -99,13 +110,14 @@
   when: erlang_version is defined and elixir_version is defined
   become: yes
   file:
+    remote_src: true
     src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
     dest: '/etc/systemd/system'
     state: link
   tags:
     - deploy
 
-- name: Application | Create .env file
+- name: EX Application | Create .env file
   when:
     - dot_env_file.dest is defined 
     - dot_env is defined
