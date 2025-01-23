@@ -45,7 +45,7 @@
 - name: EX Application | Copy dev.exs config
   when: erlang_version is defined and elixir_version is defined and phoenix_version is defined
   become: yes
-  file:
+  ansible.builtin.copy:
     remote_src: true
     src: '{{ project_src }}/config/{{ dev_exs_config }}'
     dest: '{{ project_src }}/config/dev.exs'
@@ -109,7 +109,7 @@
 - name: EX Application | Link application
   when: erlang_version is defined and elixir_version is defined
   become: yes
-  file:
+  ansible.builtin.copy:
     remote_src: true
     src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
     dest: '/etc/systemd/system'
