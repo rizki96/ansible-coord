@@ -49,7 +49,7 @@
   file:
     src: '{{ project_src }}/config/{{ dev_exs_config }}'
     dest: '{{ project_src }}/config/dev.exs'
-    state: file
+    state: link
   tags:
     - deploy
 
@@ -106,7 +106,7 @@
   tags:
     - deploy
 
-- name: EX Application | Link application
+- name: EX Application | Link application to systemd
   when: erlang_version is defined and elixir_version is defined
   become: yes
   file:
