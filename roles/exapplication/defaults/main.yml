@@ -1,4 +1,2 @@
 ---
-vars:
-  - app_tarball: "{{ tarballs_dir }}/{{ project_name }}-{{ vsn_next }}.tar.gz"
-  
+- app_tarball: "{{ tarballs_dir }}/{{ project_name }}-{{ vsn_next }}.tar.gz"
