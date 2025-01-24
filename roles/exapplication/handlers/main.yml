@@ -1,4 +1,8 @@
 ---
-- name: start EX Application
+- name: reload and start EX Application
   become: yes
   systemd: state=started name={{ project_name }} daemon_reload=yes
+
+- name: reload and stop EX Application
+  become: yes
+  systemd: state=stopped name={{ project_name }} daemon_reload=yes

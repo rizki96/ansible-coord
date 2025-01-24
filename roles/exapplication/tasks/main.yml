@@ -154,7 +154,7 @@
   tags:
     - deploy
 
-- name: EX Application | Link application to systemd
+- name: EX Application | Link application to systemd and start the service
   when: 
     - erlang_version is defined and elixir_version is defined and phoenix_version is defined
     - vsn_next != vsn_live
