@@ -164,6 +164,7 @@
     src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
     dest: '/etc/systemd/system/{{ project_name }}.service'
     state: link
+    force: yes
   notify: reload and start EX Application
   environment: "{{ dot_env }}"
   tags:
