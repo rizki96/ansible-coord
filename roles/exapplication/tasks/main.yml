@@ -161,8 +161,8 @@
   changed_when: true
   become: yes
   file:
-    src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ project_name }}.service'
-    dest: '/etc/systemd/system/{{ project_name }}.service'
+    src: '{{ project_src }}/_build/prod/systemd/lib/systemd/system/{{ service_name }}.service'
+    dest: '/etc/systemd/system/{{ service_name }}.service'
     state: link
     force: yes
   notify: reload and start EX Application
